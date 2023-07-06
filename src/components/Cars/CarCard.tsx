@@ -8,7 +8,7 @@ type Position = {
   lattitude: number;
 };
 
-type CarCardProps = {
+export type CarInfo = {
   id: string;
   vendor: string;
   model: string;
@@ -16,7 +16,7 @@ type CarCardProps = {
   position: Position;
 };
 
-export default function CarCard(props: CarCardProps) {
+export default function CarCard(props: CarInfo) {
   return (
     <button className="p-3 group hover:bg-slate-50 transition-colors block w-full shadow-md rounded-lg border border-b-0">
       <div className="grid grid-cols-[auto_1fr] items-center">

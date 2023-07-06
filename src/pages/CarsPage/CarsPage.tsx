@@ -1,5 +1,22 @@
-import CarCard from "@/components/Cars/CarCard";
+import CarCard, { CarInfo } from "@/components/Cars/CarCard";
 import { Button } from "@/components/ui/button";
+
+const cars: CarInfo[] = [
+  {
+    color: "blue",
+    id: "TYGX89",
+    model: "Fiesta 2013",
+    position: { lattitude: 12312.123, longitude: 124554.2 },
+    vendor: "Ford",
+  },
+  {
+    color: "red",
+    id: "SYGX42",
+    model: "Focus 2020",
+    position: { lattitude: 12312.123, longitude: 124554.2 },
+    vendor: "Ford",
+  },
+];
 
 export default function CarsPage() {
   return (
@@ -16,22 +33,13 @@ export default function CarsPage() {
           Administra tus autos
         </h2>
         <div className="mt-3 space-y-3">
-          <CarCard
-            color="blue"
-            id="TYGX89"
-            model="Fiesta 2013"
-            position={{ lattitude: 12312.123, longitude: 124554.2 }}
-            vendor="Ford"
-          />
-          <CarCard
-            color="red"
-            id="SYGX42"
-            model="Focus 2020"
-            position={{ lattitude: 12312.123, longitude: 124554.2 }}
-            vendor="Ford"
-          />
+          {cars.map((car) => (
+            <CarCard key={car.id} {...car} />
+          ))}
         </div>
-        <Button className="w-full text-base py-6 mt-4">Agregar nuevo auto</Button>
+        <Button className="w-full text-base py-6 mt-4">
+          Agregar nuevo auto
+        </Button>
       </section>
     </div>
   );
