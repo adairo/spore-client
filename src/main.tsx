@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import LoginForm from "@/components/Login/Login";
 import "./main.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import SignupForm from "./components/SignUp/SignUp";
 
 const Root = () => {
   return (
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginForm />,
+      },
+      {
+        path: "sign-up",
+        element: <SignupForm />,
       },
     ],
   },
