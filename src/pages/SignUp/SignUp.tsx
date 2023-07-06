@@ -21,7 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Select } from "../ui/select";
+import { Select } from "@/components/ui/select";
 import {
   SelectContent,
   SelectItem,
@@ -38,7 +38,7 @@ const signupSchema = z.object({
   role: z.enum(["regular", "admin"]),
 });
 
-function SignupForm() {
+function SignupPage() {
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -166,4 +166,4 @@ function SignupForm() {
   );
 }
 
-export default SignupForm;
+export default SignupPage;

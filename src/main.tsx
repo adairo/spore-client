@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import LoginForm from "@/components/Login/Login";
+import LoginPage from "@/pages/Login/Login";
+import SignupPage from "./pages/SignUp/SignUp";
 import "./main.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import SignupForm from "./components/SignUp/SignUp";
+import CarsPage from "@/pages/CarsPage/CarsPage";
 
 const Root = () => {
   return (
@@ -23,11 +24,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <LoginForm />,
+        element: <LoginPage />,
       },
       {
         path: "sign-up",
-        element: <SignupForm />,
+        element: <SignupPage />,
+      },
+      {
+        path: "cars",
+        element: <CarsPage />,
       },
     ],
   },
