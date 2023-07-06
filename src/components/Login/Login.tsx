@@ -25,7 +25,7 @@ const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
   password: z
     .string()
-    .min(8, { message: "La contraseña debe ser de al menos 4 caracteres" }),
+    .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
 });
 
 function LoginForm() {
@@ -47,7 +47,7 @@ function LoginForm() {
         <CardHeader>
           <CardTitle>Inicia sesión</CardTitle>
           <CardDescription>
-            Empieza a administrar tus autos desde SporeCar
+            Visualiza la posición de tus autos en tiempo real
           </CardDescription>
         </CardHeader>
         <CardContent>

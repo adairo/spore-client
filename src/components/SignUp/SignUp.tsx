@@ -33,9 +33,9 @@ const signupSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
   password: z
     .string()
-    .min(8, { message: "La contraseña debe ser de al menos 4 caracteres" }),
-  passwordConfirm: z.string(),
-  role: z.enum(["regular", "administrador"]),
+    .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
+  passwordConfirm: z.string().min(8),
+  role: z.enum(["regular", "admin"]),
 });
 
 function SignupForm() {
@@ -50,6 +50,14 @@ function SignupForm() {
   });
 
   const onSubmit = (data: z.infer<typeof signupSchema>) => {
+    if (data.password !== data.passwordConfirm) {
+      form.setError("passwordConfirm", {
+        type: "custom",
+        message: "Las contraseñas no coinciden",
+      });
+
+      return;
+    }
     console.log(data);
   };
 
