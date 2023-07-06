@@ -34,7 +34,7 @@ const signupSchema = z.object({
   password: z
     .string()
     .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
-  passwordConfirm: z.string().min(8),
+  passwordConfirm: z.string().nonempty("Este campo no puede estar vacío"),
   role: z.enum(["regular", "admin"]),
 });
 
@@ -62,9 +62,9 @@ function SignupForm() {
   };
 
   return (
-    <div className="grid w-full place-items-center bg-slate-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="grid sm:place-items-center bg-slate-50">
+      <Card className="w-full sm:max-w-md border-0 sm:border">
+        <CardHeader className="mt-4 sm:mt-2">
           <CardTitle>Crea una cuenta</CardTitle>
           <CardDescription>
             Empieza a administrar tus autos desde SporeCar

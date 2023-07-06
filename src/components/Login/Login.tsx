@@ -42,9 +42,9 @@ function LoginForm() {
   };
 
   return (
-    <div className="grid w-full place-items-center bg-slate-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="grid sm:place-items-center bg-slate-50">
+      <Card className="w-full sm:max-w-md border-0 sm:border">
+        <CardHeader className="mt-4 sm:mt-2">
           <CardTitle>Inicia sesión</CardTitle>
           <CardDescription>
             Visualiza la posición de tus autos en tiempo real
