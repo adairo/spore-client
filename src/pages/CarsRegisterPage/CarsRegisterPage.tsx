@@ -12,7 +12,7 @@ export default function CarsRegisterPage() {
           finalizado
         </p>
         <CarRegisterForm
-          onSuccess={() => navigate("/cars")}
+          onSubmit={() => navigate("/cars")}
           onCancel={() => navigate("/cars")}
         />
       </div>

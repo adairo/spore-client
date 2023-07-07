@@ -1,31 +1,24 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import CarRegisterForm from "./CarRegisterForm";
+import { CAR_COLOR_MAP, CarData } from "./Car.schema";
+import { useState } from "react";
 
-const COLOR_MAP = {
-  red: "bg-red-400 border-4   border-red-100",
-  blue: "bg-cyan-500 border-4 border-cyan-100",
-};
-
-type CarPosition = {
-  longitude: number;
-  lattitude: number;
-};
-
-export type CarInfo = {
-  id: string;
-  vendor: string;
-  model: string;
-  color: keyof typeof COLOR_MAP;
-  position: CarPosition;
-};
-
-export default function CarCard(props: CarInfo) {
+export default function CarCard(props: CarData) {
+  const [isEditing, setIsEditing] = useState(false);
   return (
     <button className="py-4 px-5 block w-full shadow-md rounded-lg border border-b-0">
       <div className="grid grid-cols-[auto_1fr] items-center">
         <div
           data-color
           className={`${
-            COLOR_MAP[props.color]
+            CAR_COLOR_MAP[props.color]
           } rounded-full aspect-square w-12 h-auto `}
         />
         <div className="text-right">
@@ -34,7 +27,7 @@ export default function CarCard(props: CarInfo) {
               data-matricula
               className="uppercase font-semibold text-base inline"
             >
-              {props.id}
+              {props.plate}
             </p>
           </div>
           <p data-marca-modelo>
@@ -43,41 +36,57 @@ export default function CarCard(props: CarInfo) {
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-2">
-        <Button variant="ghost">Editar</Button>
-        <Button variant="outline">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="w-5 h-5 inline mr-1 fill-slate-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-              clipRule="evenodd"
+        <Dialog open={isEditing} onOpenChange={(value) => setIsEditing(value)}>
+          <DialogTrigger asChild>
+            <Button onClick={() => setIsEditing(!isEditing)} variant="outline">
+              Editar
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar auto</DialogTitle>
+            </DialogHeader>
+            <CarRegisterForm
+              initialValues={props}
+              onCancel={() => setIsEditing(false)}
+              onSubmit={(data) => {
+                console.log(data);
+              }}
             />
-          </svg>
-          Ver en mapa
-        </Button>
-      </div>
+          </DialogContent>
+        </Dialog>
 
-      {/* <div className="mt-5 text-slate-500 text-right">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-6 h-6 inline"
-        >
-          <path
-            fillRule="evenodd"
-            d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <span className="text-sm">
-          <span className="font-semibold">Coordenadas:</span>{" "}
-          {props.position.lattitude}, {props.position.longitude}
-        </span>
-      </div> */}
+        <Dialog open={isEditing} onOpenChange={(value) => setIsEditing(value)}>
+          <DialogTrigger asChild>
+            <Button variant="secondary">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="w-5 h-5 inline mr-1 fill-slate-600"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Ubicación
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Actualizar ubicación</DialogTitle>
+            </DialogHeader>
+            <CarRegisterForm
+              initialValues={props}
+              onCancel={() => setIsEditing(false)}
+              onSubmit={(data) => {
+                console.log(data);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
     </button>
   );
 }

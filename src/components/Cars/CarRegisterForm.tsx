@@ -9,31 +9,9 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "../ui/button";
-
-const REQUIRED_MESSAGE = "Este campo es requerido";
-
-const carRegisterSchema = z.object({
-  carId: z.string().nonempty(REQUIRED_MESSAGE),
-  vendor: z.string().nonempty(REQUIRED_MESSAGE),
-  model: z.string().nonempty(REQUIRED_MESSAGE),
-  color: z.enum(["azul", "rojo"]),
-  position: z.object({
-    lattitude: z.coerce.number(),
-    longitude: z.coerce.number(),
-  }),
-});
-
-type CardData = z.infer<typeof carRegisterSchema>;
+import { NewCarData, newCarSchema } from "./Car.schema";
 
 /**
  * Provide onSubmit and onCancel callbacks as props.
@@ -41,25 +19,19 @@ type CardData = z.infer<typeof carRegisterSchema>;
  * the register form.
  */
 type Props = {
-  onSuccess: () => void;
+  initialValues?: NewCarData;
+  onSubmit: (data: NewCarData) => void;
   onCancel: () => void;
 };
 
 export default function CarRegisterForm(props: Props) {
-  const form = useForm<CardData>({
-    resolver: zodResolver(carRegisterSchema),
-    defaultValues: {
-      vendor: "",
-      carId: "",
-      color: "azul",
-      model: "",
-    },
+  const form = useForm<NewCarData>({
+    resolver: zodResolver(newCarSchema),
+    defaultValues: props.initialValues,
   });
 
-  const onSubmit = (data: CardData) => {
-    console.log(data);
-    // make post request
-    props.onSuccess();
+  const onSubmit = (data: NewCarData) => {
+    props.onSubmit(data);
   };
 
   return (
@@ -101,7 +73,7 @@ export default function CarRegisterForm(props: Props) {
         />
         <FormField
           control={form.control}
-          name="carId"
+          name="plate"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Matrícula</FormLabel>
@@ -118,62 +90,20 @@ export default function CarRegisterForm(props: Props) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Color</FormLabel>
-              <Select onValueChange={(v) => field.onChange(v as any)}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona el color de tu auto" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="azul">azul</SelectItem>
-                  <SelectItem value="rojo">rojo</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <select
+                  {...field}
+                  className="w-full bg-white border px-2 py-2 rounded-md"
+                >
+                  <option value="red">rojo</option>
+                  <option value="blue">azul</option>
+                </select>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <fieldset className="!mt-10 space-y-6">
-          <legend className="font-semibold">Coordenadas</legend>
-          <FormField
-            control={form.control}
-            name="position.lattitude"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Latitud</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    {...field}
-                    placeholder="p. ej. 14523.089"
-                  />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="position.longitude"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Longitud</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    {...field}
-                    placeholder="p. ej. -1265.944"
-                  />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </fieldset>
         <div className="flex gap-2 flex-col-reverse sm:flex-row justify-stretch">
           <Button
             onClick={props.onCancel}
