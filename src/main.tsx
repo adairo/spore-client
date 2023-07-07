@@ -5,10 +5,11 @@ import SignupPage from "./pages/SignUp/SignUp";
 import "./main.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import CarsPage from "@/pages/CarsPage/CarsPage";
+import CarsRegisterPage from "./pages/CarsRegisterPage/CarsRegisterPage";
 
 const Root = () => {
   return (
-    <div className="full-screen-height grid grid-rows-[auto_1fr]">
+    <div className=" grid grid-rows-[auto_1fr]">
       <header className="px-4 py-3 text-white bg-black text-xl font-bold">
         SporeCar
       </header>
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
         path: "cars",
         element: <CarsPage />,
       },
+      {
+        path: "cars/register",
+        element: <CarsRegisterPage />
+      }
     ],
   },
 ]);
