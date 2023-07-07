@@ -9,9 +9,12 @@ import {
 import CarRegisterForm from "./CarRegisterForm";
 import { CAR_COLOR_MAP, CarData } from "./Car.schema";
 import { useState } from "react";
+import CarPositionForm from "./CarPositionForm";
 
 export default function CarCard(props: CarData) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isUpdatingPosition, setIsUpdatingPosition] = useState(false);
+
   return (
     <button className="py-4 px-5 block w-full shadow-md rounded-lg border border-b-0">
       <div className="grid grid-cols-[auto_1fr] items-center">
@@ -56,7 +59,10 @@ export default function CarCard(props: CarData) {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={isEditing} onOpenChange={(value) => setIsEditing(value)}>
+        <Dialog
+          open={isUpdatingPosition}
+          onOpenChange={(value) => setIsUpdatingPosition(value)}
+        >
           <DialogTrigger asChild>
             <Button variant="secondary">
               <svg
@@ -77,9 +83,8 @@ export default function CarCard(props: CarData) {
             <DialogHeader>
               <DialogTitle>Actualizar ubicación</DialogTitle>
             </DialogHeader>
-            <CarRegisterForm
-              initialValues={props}
-              onCancel={() => setIsEditing(false)}
+            <CarPositionForm
+              onCancel={() => setIsUpdatingPosition(false)}
               onSubmit={(data) => {
                 console.log(data);
               }}
