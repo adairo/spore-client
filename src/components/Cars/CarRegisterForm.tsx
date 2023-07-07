@@ -20,27 +20,55 @@ import {
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
 
+const REQUIRED_MESSAGE = "Este campo es requerido";
+
 const carRegisterSchema = z.object({
-  carId: z.string(),
-  vendor: z.string(),
-  model: z.string(),
+  carId: z.string().nonempty(REQUIRED_MESSAGE),
+  vendor: z.string().nonempty(REQUIRED_MESSAGE),
+  model: z.string().nonempty(REQUIRED_MESSAGE),
   color: z.enum(["azul", "rojo"]),
-  position: z.string().regex(/^([+-]?\d+.\d+),\s?([+-]?\d+.\d+)$/), // 14230.0023, -17237.433
+  position: z.object({
+    lattitude: z.coerce.number(),
+    longitude: z.coerce.number(),
+  }),
 });
 
-export default function CarRegisterForm() {
-  const form = useForm<z.infer<typeof carRegisterSchema>>({
+type CardData = z.infer<typeof carRegisterSchema>;
+
+/**
+ * Provide onSubmit and onCancel callbacks as props.
+ * This way the caller has full control of what to do with
+ * the register form.
+ */
+type Props = {
+  onSuccess: () => void;
+  onCancel: () => void;
+};
+
+export default function CarRegisterForm(props: Props) {
+  const form = useForm<CardData>({
     resolver: zodResolver(carRegisterSchema),
     defaultValues: {
+      vendor: "",
       carId: "",
       color: "azul",
       model: "",
-      position: "",
     },
   });
+
+  const onSubmit = (data: CardData) => {
+    console.log(data);
+    // make post request
+    props.onSuccess();
+  };
+
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        id="register-form"
+        className="space-y-6"
+      >
         <FormField
           control={form.control}
           name="vendor"
@@ -80,7 +108,6 @@ export default function CarRegisterForm() {
               <FormControl>
                 <Input type="text" {...field} />
               </FormControl>
-              <FormDescription>No hace falta incluir guiones</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -106,29 +133,59 @@ export default function CarRegisterForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="position"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Coordenadas</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  placeholder="p. ej. 14523.089, -1265.944"
-                />
-              </FormControl>
-              <FormDescription>
-                Ingresa los valores de latitud y longitud separados por coma
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-2 ">
-          <Button variant="outline" className="w-full ">Cancelar</Button>
-          <Button className="w-full">Guardar</Button>
+
+        <fieldset className="!mt-10 space-y-6">
+          <legend className="font-semibold">Coordenadas</legend>
+          <FormField
+            control={form.control}
+            name="position.lattitude"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Latitud</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="p. ej. 14523.089"
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="position.longitude"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Longitud</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="p. ej. -1265.944"
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </fieldset>
+        <div className="flex gap-2 flex-col-reverse sm:flex-row justify-stretch">
+          <Button
+            onClick={props.onCancel}
+            variant="outline"
+            className="flex-1"
+            type="button"
+          >
+            Cancelar
+          </Button>
+          <Button form="register-form" className="flex-1" type="submit">
+            Guardar
+          </Button>
         </div>
       </form>
     </Form>
