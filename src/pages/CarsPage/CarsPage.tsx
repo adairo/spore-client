@@ -1,8 +1,10 @@
 import { CarData } from "@/components/Cars/Car.schema";
 import CarCard from "@/components/Cars/CarCard";
 import { Button } from "@/components/ui/button";
+import jwtDecode from "jwt-decode";
+import { useEffect } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const cars: CarData[] = [
   {
@@ -23,7 +25,41 @@ const cars: CarData[] = [
   },
 ];
 
+const getSession = () => {
+  const token = sessionStorage.getItem("sporecar_token");
+
+  const unauthorized = () => ({
+    user: null,
+  });
+
+  if (!token) {
+    return unauthorized();
+  }
+
+  const decodedUser = jwtDecode<{ userId: number; role: string; exp: number }>(
+    token
+  );
+  if (Date.now() <= decodedUser.exp) {
+    return unauthorized();
+  }
+
+  return {
+    user: {
+      id: decodedUser.userId,
+      role: decodedUser.role,
+    },
+  };
+};
+
 export default function CarsPage() {
+  const navigate = useNavigate();
+  const { user } = getSession();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <div className="p-4 space-y-10">
       <section>
