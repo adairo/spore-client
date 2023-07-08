@@ -20,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Select } from "@/components/ui/select";
 import {
   SelectContent,
@@ -39,6 +39,7 @@ const signupSchema = z.object({
 });
 
 function SignupPage() {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -58,7 +59,26 @@ function SignupPage() {
 
       return;
     }
-    console.log(data);
+
+    const { passwordConfirm, ...payload } = data;
+
+    fetch("http://localhost:3001/users/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if ("error" in res) {
+          throw new Error(res.error);
+        }
+
+        sessionStorage.setItem("sporecar_token", res.token);
+        navigate("/cars")
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (
@@ -158,7 +178,7 @@ function SignupPage() {
             Crear cuenta
           </Button>
           <Button variant={"outline"} className="w-full text-base" asChild>
-            <Link to="/login">Inicia sesión</Link>
+            <Link to="/login">Ya tengo una cuenta</Link>
           </Button>
         </CardFooter>
       </Card>
