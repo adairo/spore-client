@@ -28,19 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const signupSchema = z.object({
-  email: z.string().email("Ingresa un correo válido"),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
-  passwordConfirm: z.string().nonempty("Este campo no puede estar vacío"),
-  role: z.enum(["regular", "admin"]),
-});
+import { SignupPayload, signupSchema } from "@/components/Users/users.schema";
+import { signup } from "@/components/Users/users.services";
 
 function SignupPage() {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof signupSchema>>({
+  const form = useForm<SignupPayload>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
@@ -52,31 +45,19 @@ function SignupPage() {
 
   const onSubmit = (data: z.infer<typeof signupSchema>) => {
     if (data.password !== data.passwordConfirm) {
-      form.setError("passwordConfirm", {
+      return form.setError("passwordConfirm", {
         type: "custom",
         message: "Las contraseñas no coinciden",
       });
-
-      return;
     }
 
+    // don't send the password confirmation to the server...
     const { passwordConfirm, ...payload } = data;
 
-    fetch("http://localhost:3001/users/", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if ("error" in res) {
-          throw new Error(res.error);
-        }
-
-        sessionStorage.setItem("sporecar_token", res.token);
-        navigate("/cars")
+    signup(payload)
+      .then((data) => {
+        sessionStorage.setItem("sporecar_token", data.token);
+        navigate("/cars");
       })
       .catch((error) => alert(error.message));
   };
@@ -148,7 +129,7 @@ function SignupPage() {
                     <Select
                       onValueChange={(e) =>
                         field.onChange(
-                          e as z.infer<typeof signupSchema>["role"] // string is not asignable to ("regular" | "administrador")
+                          e as SignupPayload["role"] // string is not asignable to ("regular" | "administrador")
                         )
                       }
                       defaultValue={field.value}

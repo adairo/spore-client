@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -20,36 +19,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  login,
+} from "@/components/Users/users.services";
+import { LoginPayload, loginSchema } from "@/components/Users/users.schema";
 
-const login = (userData: LoginPayload) => {
-  return fetch("http://localhost:3001/users/login", {
-    method: "POST",
-    body: JSON.stringify(userData),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if ("error" in data) {
-        throw new Error(data.error);
-      }
-      return data;
-    });
-};
-
-const loginSchema = z.object({
-  email: z.string().email("Ingresa un correo válido"),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
-});
-
-type LoginPayload = z.infer<typeof loginSchema>;
-
-function LoginForm() {
+export default function LoginForm() {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof loginSchema>>({
+  const form = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -57,7 +34,7 @@ function LoginForm() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  const onSubmit = (data: LoginPayload) => {
     login(data)
       .then((response) => {
         sessionStorage.setItem("sporecar_session", response.token);
@@ -124,5 +101,3 @@ function LoginForm() {
     </div>
   );
 }
-
-export default LoginForm;
