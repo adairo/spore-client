@@ -19,7 +19,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const login = (userData: LoginPayload) => {
+  return fetch("http://localhost:3001/users/login", {
+    method: "POST",
+    body: JSON.stringify(userData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if ("error" in data) {
+        throw new Error(data.error);
+      }
+      return data;
+    });
+};
 
 const loginSchema = z.object({
   email: z.string().email("Ingresa un correo válido"),
@@ -28,7 +45,10 @@ const loginSchema = z.object({
     .min(8, { message: "La contraseña debe ser de al menos 8 caracteres" }),
 });
 
+type LoginPayload = z.infer<typeof loginSchema>;
+
 function LoginForm() {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,7 +58,12 @@ function LoginForm() {
   });
 
   const onSubmit = (data: z.infer<typeof loginSchema>) => {
-    console.log(data);
+    login(data)
+      .then((response) => {
+        sessionStorage.setItem("sporecar_session", response.token);
+        navigate("/cars");
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (

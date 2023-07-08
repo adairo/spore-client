@@ -25,41 +25,44 @@ const cars: CarData[] = [
   },
 ];
 
-const getSession = () => {
-  const token = sessionStorage.getItem("sporecar_token");
+type UserToken = {
+  id: number;
+  role: string;
+  exp: number;
+  email: string;
+};
 
-  const unauthorized = () => ({
-    user: null,
-  });
+const getSession = () => {
+  const token = sessionStorage.getItem("sporecar_session");
 
   if (!token) {
-    return unauthorized();
+    return null;
   }
 
-  const decodedUser = jwtDecode<{ userId: number; role: string; exp: number }>(
-    token
-  );
+  const decodedUser = jwtDecode<UserToken>(token);
   if (Date.now() <= decodedUser.exp) {
-    return unauthorized();
+    return null;
   }
 
   return {
     user: {
-      id: decodedUser.userId,
+      id: decodedUser.id,
       role: decodedUser.role,
+      email: decodedUser.email,
     },
   };
 };
 
 export default function CarsPage() {
   const navigate = useNavigate();
-  const { user } = getSession();
+  const session = getSession();
+  console.log("🚀 ~ file: CarsPage.tsx:59 ~ CarsPage ~ session:", session)
 
   useEffect(() => {
-    if (!user) {
+    if (!session) {
       navigate("/login");
     }
-  }, [user]);
+  }, [session]);
   return (
     <div className="p-4 space-y-10">
       <section>
