@@ -28,4 +28,5 @@ export const carPositionSchema = z.object({
 
 export type CarPosition = z.infer<typeof carPositionSchema>;
 export type NewCarData = CarRegisterPayload;
+export type CarEditPayload = Partial<NewCarData>
 export type CarData = NewCarData & { id: number; position: CarPosition };

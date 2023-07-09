@@ -7,13 +7,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CarRegisterForm from "./CarRegisterForm";
-import { CAR_COLOR_MAP, CarData } from "./cars.schema";
+import { CAR_COLOR_MAP, CarData, CarEditPayload } from "./cars.schema";
 import { useState } from "react";
 import CarPositionForm from "./CarPositionForm";
+import { editCar } from "./cars.services";
 
 export default function CarCard(props: CarData) {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdatingPosition, setIsUpdatingPosition] = useState(false);
+
+  const handleEditCar = (data: CarEditPayload) => {
+    editCar(props.id, data)
+      .then(() => setIsEditing(false))
+      .catch(alert);
+  };
 
   return (
     <button className="py-4 px-5 block w-full shadow-md rounded-lg border border-b-0">
@@ -52,9 +59,7 @@ export default function CarCard(props: CarData) {
             <CarRegisterForm
               initialValues={props}
               onCancel={() => setIsEditing(false)}
-              onSubmit={(data) => {
-                console.log(data);
-              }}
+              onSubmit={handleEditCar}
             />
           </DialogContent>
         </Dialog>
