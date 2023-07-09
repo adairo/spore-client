@@ -30,14 +30,10 @@ export default function CarRegisterForm(props: Props) {
     defaultValues: props.initialValues,
   });
 
-  const onSubmit = (data: NewCarData) => {
-    props.onSubmit(data);
-  };
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(props.onSubmit)}
         id="register-form"
         className="space-y-6"
       >

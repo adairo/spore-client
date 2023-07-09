@@ -1,8 +1,8 @@
 import CarCard from "@/components/Cars/CarCard";
 import { CarData } from "@/components/Cars/cars.schema";
-import { getSession } from "@/lib/auth";
+import { getSession, getToken } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -25,9 +25,42 @@ const cars: CarData[] = [
   },
 ];
 
+const useCars = () => {
+  const [cars, setCars] = useState<any>([]);
+  const [error, setError] = useState<Error | undefined>();
+
+  useEffect(() => {
+    const token = getToken() as string;
+    fetch("http://localhost:3001/cars", {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if ("error" in data) {
+          throw new Error(data.error);
+        }
+
+        return data;
+      })
+      .then(setCars)
+      .catch((error) => setError(error));
+  }, []);
+
+  return {
+    cars,
+    error,
+    isError: !!error,
+  };
+};
+
 export default function CarsPage() {
   const navigate = useNavigate();
   const session = getSession();
+  const _cars = useCars();
+  console.log("🚀 ~ file: CarsPage.tsx:63 ~ CarsPage ~ _cars:", _cars)
 
   useEffect(() => {
     if (!session) {
