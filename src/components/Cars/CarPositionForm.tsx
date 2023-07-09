@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { CarPosition, carPositionSchema } from "./Car.schema";
+import { CarPosition, carPositionSchema } from "./cars.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,

@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { NewCarData, newCarSchema } from "./Car.schema";
+import { NewCarData, carRegisterSchema } from "./cars.schema";
 
 /**
  * Provide onSubmit and onCancel callbacks as props.
@@ -26,7 +26,7 @@ type Props = {
 
 export default function CarRegisterForm(props: Props) {
   const form = useForm<NewCarData>({
-    resolver: zodResolver(newCarSchema),
+    resolver: zodResolver(carRegisterSchema),
     defaultValues: props.initialValues,
   });
 

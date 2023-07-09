@@ -19,9 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  login,
-} from "@/components/Users/users.services";
+import { login } from "@/lib/auth";
 import { LoginPayload, loginSchema } from "@/components/Users/users.schema";
 
 export default function LoginForm() {

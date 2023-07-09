@@ -1,8 +1,12 @@
 import CarRegisterForm from "@/components/Cars/CarRegisterForm";
+import { CarRegisterPayload } from "@/components/Cars/cars.schema";
 import { useNavigate } from "react-router-dom";
 
 export default function CarsRegisterPage() {
   const navigate = useNavigate()
+  const handleRegister = (data: CarRegisterPayload) => {
+    
+  }
   return (
     <div className="p-4 grid place-items-center">
       <div className="max-w-sm">
@@ -12,7 +16,7 @@ export default function CarsRegisterPage() {
           finalizado
         </p>
         <CarRegisterForm
-          onSubmit={() => navigate("/cars")}
+          onSubmit={handleRegister}
           onCancel={() => navigate("/cars")}
         />
       </div>

@@ -8,12 +8,13 @@ export const CAR_COLOR_MAP: Record<CarColor, string> = {
 };
 
 const REQUIRED_MESSAGE = "Este campo es requerido";
-export const newCarSchema = z.object({
+export const carRegisterSchema = z.object({
   plate: z.string().nonempty(REQUIRED_MESSAGE),
   vendor: z.string().nonempty(REQUIRED_MESSAGE),
   model: z.string().nonempty(REQUIRED_MESSAGE),
   color: z.enum(CAR_COLORS),
 });
+export type CarRegisterPayload = z.infer<typeof carRegisterSchema>
 
 const coordinateSchema = z.number({
   coerce: true,
@@ -25,5 +26,5 @@ export const carPositionSchema = z.object({
 });
 
 export type CarPosition = z.infer<typeof carPositionSchema>;
-export type NewCarData = z.infer<typeof newCarSchema>;
+export type NewCarData = CarRegisterPayload;
 export type CarData = NewCarData & { id: number; position: CarPosition };

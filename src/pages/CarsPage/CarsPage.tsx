@@ -1,7 +1,7 @@
-import { CarData } from "@/components/Cars/Car.schema";
 import CarCard from "@/components/Cars/CarCard";
+import { CarData } from "@/components/Cars/cars.schema";
+import { getSession } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import jwtDecode from "jwt-decode";
 import { useEffect } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -25,38 +25,9 @@ const cars: CarData[] = [
   },
 ];
 
-type UserToken = {
-  id: number;
-  role: string;
-  exp: number;
-  email: string;
-};
-
-const getSession = () => {
-  const token = sessionStorage.getItem("sporecar_session");
-
-  if (!token) {
-    return null;
-  }
-
-  const decodedUser = jwtDecode<UserToken>(token);
-  if (Date.now() <= decodedUser.exp) {
-    return null;
-  }
-
-  return {
-    user: {
-      id: decodedUser.id,
-      role: decodedUser.role,
-      email: decodedUser.email,
-    },
-  };
-};
-
 export default function CarsPage() {
   const navigate = useNavigate();
   const session = getSession();
-  console.log("🚀 ~ file: CarsPage.tsx:59 ~ CarsPage ~ session:", session)
 
   useEffect(() => {
     if (!session) {

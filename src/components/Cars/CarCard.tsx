@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CarRegisterForm from "./CarRegisterForm";
-import { CAR_COLOR_MAP, CarData } from "./Car.schema";
+import { CAR_COLOR_MAP, CarData } from "./cars.schema";
 import { useState } from "react";
 import CarPositionForm from "./CarPositionForm";
 

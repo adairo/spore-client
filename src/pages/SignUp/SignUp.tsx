@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SignupPayload, signupSchema } from "@/components/Users/users.schema";
-import { signup } from "@/components/Users/users.services";
+import { signup } from "@/lib/auth";
 
 function SignupPage() {
   const navigate = useNavigate();
