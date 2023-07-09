@@ -6,27 +6,8 @@ import { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-const cars: CarData[] = [
-  {
-    id: 123,
-    color: "blue",
-    plate: "TYGX89",
-    model: "Fiesta 2013",
-    position: { lattitude: 12312.123, longitude: 124554.2 },
-    vendor: "Ford",
-  },
-  {
-    id: 1245,
-    color: "red",
-    plate: "SYGX42",
-    model: "Focus 2020",
-    position: { lattitude: 12312.123, longitude: 124554.2 },
-    vendor: "Ford",
-  },
-];
-
 const useCars = () => {
-  const [cars, setCars] = useState<any>([]);
+  const [cars, setCars] = useState<CarData[]>([]);
   const [error, setError] = useState<Error | undefined>();
 
   useEffect(() => {
@@ -59,8 +40,7 @@ const useCars = () => {
 export default function CarsPage() {
   const navigate = useNavigate();
   const session = getSession();
-  const _cars = useCars();
-  console.log("🚀 ~ file: CarsPage.tsx:63 ~ CarsPage ~ _cars:", _cars)
+  const { cars } = useCars();
 
   useEffect(() => {
     if (!session) {
