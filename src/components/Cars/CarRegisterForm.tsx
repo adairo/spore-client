@@ -24,10 +24,20 @@ type Props = {
   onCancel: () => void;
 };
 
-export default function CarRegisterForm(props: Props) {
+const INITIAL_VALUES: NewCarData = {
+  vendor: "",
+  model: "",
+  plate: "",
+  color: "blue",
+};
+
+export default function CarRegisterForm({
+  initialValues = INITIAL_VALUES,
+  ...props
+}: Props) {
   const form = useForm<NewCarData>({
     resolver: zodResolver(carRegisterSchema),
-    defaultValues: props.initialValues,
+    defaultValues: initialValues,
   });
 
   return (
