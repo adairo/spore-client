@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SignupPayload, signupSchema } from "@/components/Users/users.schema";
-import { signup } from "@/lib/auth";
+import { login, setToken, signup } from "@/lib/auth";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -55,11 +55,10 @@ function SignupPage() {
     const { passwordConfirm, ...payload } = data;
 
     signup(payload)
-      .then((data) => {
-        sessionStorage.setItem("sporecar_token", data.token);
-        navigate("/cars");
-      })
-      .catch((error) => alert(error.message));
+      .then(() => login({ email: data.email, password: data.password }))
+      .then((tokenRes) => setToken(tokenRes.token))
+      .then(() => navigate("/cars"))
+      .catch(alert);
   };
 
   return (
