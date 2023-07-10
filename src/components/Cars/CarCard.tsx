@@ -15,7 +15,18 @@ import {
 } from "./cars.schema";
 import { useState } from "react";
 import CarPositionForm from "./CarPositionForm";
-import { editCar, updatePosition } from "./cars.services";
+import { deleteCar, editCar, updatePosition } from "./cars.services";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function CarCard(props: CarData) {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,6 +44,10 @@ export default function CarCard(props: CarData) {
       .catch(alert);
   };
 
+  const handleDeleteCar = () => {
+    deleteCar(props.id).catch(alert);
+  };
+
   return (
     <button className="py-4 px-5 block w-full shadow-md rounded-lg border border-b-0">
       <div className="grid grid-cols-[auto_1fr] items-center">
@@ -43,23 +58,78 @@ export default function CarCard(props: CarData) {
           } rounded-full aspect-square w-12 h-auto `}
         />
         <div className="text-right">
-          <div>
-            <p
-              data-matricula
-              className="uppercase font-semibold text-base inline"
-            >
-              {props.plate}
-            </p>
-          </div>
+          <p
+            data-matricula
+            className="uppercase font-semibold text-base inline"
+          >
+            {props.plate}
+          </p>
           <p data-marca-modelo>
             {props.vendor} {props.model}
+          </p>
+          <p className=" text-slate-500">
+            {props?.owneremail ?? ""}
           </p>
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-2">
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <Button variant="outline" aria-label="Eliminar automóvil">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                />
+              </svg>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                ¿Estás seguro que quieres eliminar este auto?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta acción no se puede deshacer. Una vez que elimines un auto
+                no podrás recuperar su información y el registro de coordenadas
+                geográficas
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <Button onClick={handleDeleteCar} variant="destructive">
+                  Eliminar
+                </Button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Dialog open={isEditing} onOpenChange={(value) => setIsEditing(value)}>
           <DialogTrigger asChild>
             <Button onClick={() => setIsEditing(!isEditing)} variant="outline">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5 mr-1"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                />
+              </svg>
               Editar
             </Button>
           </DialogTrigger>
@@ -83,13 +153,21 @@ export default function CarCard(props: CarData) {
             <Button variant="secondary">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
+                fill="none"
                 viewBox="0 0 24 24"
-                className="w-5 h-5 inline mr-1 fill-slate-600"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5 mr-1"
               >
                 <path
-                  fillRule="evenodd"
-                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
                 />
               </svg>
               Ubicación

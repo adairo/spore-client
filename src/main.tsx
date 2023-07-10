@@ -34,7 +34,7 @@ const Root = () => {
   };
   return (
     <div className="full-screen-height grid grid-rows-[auto_1fr]">
-      <header className="px-4 py-3 text-white bg-black text-xl font-bold flex justify-between">
+      <header className="px-4 py-3 text-white bg-black text-xl font-bold flex items-center justify-between">
         <div>SporeCar</div>
         {session ? (
           <DropdownMenu>

@@ -82,3 +82,24 @@ export function updatePosition(carId: number, position: CarPosition) {
       return data;
     });
 }
+
+export function deleteCar(carId: number) {
+  const token = getToken() as string;
+  const url = new URL(`http://localhost:3001/cars/${carId}`);
+
+  return fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if ("error" in data) {
+        throw new Error(data.error);
+      }
+
+      return data;
+    });
+}
