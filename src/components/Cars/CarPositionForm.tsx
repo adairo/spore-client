@@ -12,16 +12,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+const INITIAL_VALUES: CarPosition = {
+  lattitude: 0.0,
+  longitude: 0.0,
+};
+
 type CarPositionFormProps = {
   initialValues?: CarPosition;
   onSubmit: (data: CarPosition) => void;
   onCancel: () => void;
 };
 
-export default function CarPositionForm(props: CarPositionFormProps) {
+export default function CarPositionForm({
+  initialValues = INITIAL_VALUES,
+  ...props
+}: CarPositionFormProps) {
   const form = useForm<CarPosition>({
     resolver: zodResolver(carPositionSchema),
-    defaultValues: props.initialValues,
+    defaultValues: initialValues,
   });
 
   return (
@@ -59,7 +67,12 @@ export default function CarPositionForm(props: CarPositionFormProps) {
           <Button className="w-full" type="submit">
             Actualizar
           </Button>
-          <Button onClick={props.onCancel} className="w-full" variant="outline" type="button">
+          <Button
+            onClick={props.onCancel}
+            className="w-full"
+            variant="outline"
+            type="button"
+          >
             Cancelar
           </Button>
         </div>

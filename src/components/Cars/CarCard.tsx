@@ -7,10 +7,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CarRegisterForm from "./CarRegisterForm";
-import { CAR_COLOR_MAP, CarData, CarEditPayload } from "./cars.schema";
+import {
+  CAR_COLOR_MAP,
+  CarData,
+  CarEditPayload,
+  CarPosition,
+} from "./cars.schema";
 import { useState } from "react";
 import CarPositionForm from "./CarPositionForm";
-import { editCar } from "./cars.services";
+import { editCar, updatePosition } from "./cars.services";
 
 export default function CarCard(props: CarData) {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,6 +24,12 @@ export default function CarCard(props: CarData) {
   const handleEditCar = (data: CarEditPayload) => {
     editCar(props.id, data)
       .then(() => setIsEditing(false))
+      .catch(alert);
+  };
+
+  const handleUpdatePosition = (position: CarPosition) => {
+    updatePosition(props.id, position)
+      .then(() => setIsUpdatingPosition(false))
       .catch(alert);
   };
 
@@ -89,10 +100,9 @@ export default function CarCard(props: CarData) {
               <DialogTitle>Actualizar ubicación</DialogTitle>
             </DialogHeader>
             <CarPositionForm
+              initialValues={props.position}
               onCancel={() => setIsUpdatingPosition(false)}
-              onSubmit={(data) => {
-                console.log(data);
-              }}
+              onSubmit={handleUpdatePosition}
             />
           </DialogContent>
         </Dialog>
