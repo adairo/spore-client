@@ -32,7 +32,7 @@ const useCars = () => {
   });
 
   return {
-    cars: isLoading ? [] : cars as CarData[],
+    cars: isLoading ? [] : (cars as CarData[]),
     error,
     isError: !!error,
     isLoading,
@@ -57,7 +57,7 @@ export default function CarsPage() {
   }, [session]);
 
   return (
-    <div className="p-4 w-full grid gap-4 md:grid-cols-2 max-w-3xl mx-auto">
+    <div className="p-4 mt-4 w-full grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
       <section>
         <h2 className="mb-3 scroll-m-20 text-xl font-semibold tracking-tight">
           Mapa en vivo
@@ -90,6 +90,12 @@ export default function CarsPage() {
           {cars.map((car) => (
             <CarCard key={car.id} {...car} />
           ))}
+          {cars.length === 0 ? (
+            <p className="text-slate-600">
+              No tienes autos registrados. Haz click en Registrar nuevo auto
+              para iniciar
+            </p>
+          ) : null}
         </div>
         <Button asChild className="w-full mt-4" size="lg">
           <Link to="register">Registrar nuevo auto</Link>
