@@ -18,6 +18,10 @@ export const login = (userData: LoginPayload) => {
     });
 };
 
+export function logout() {
+  removeToken()
+}
+
 export function signup(payload: Omit<SignupPayload, "passwordConfirm">) {
   return fetch("http://localhost:3001/users/", {
     method: "POST",
@@ -43,6 +47,7 @@ export type UserToken = {
 };
 
 export const getToken = () => sessionStorage.getItem("sporecar_session");
+export const removeToken = () => sessionStorage.removeItem("sporecar_session");
 export const setToken = (token: string) =>
   sessionStorage.setItem("sporecar_session", token);
 
