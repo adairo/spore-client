@@ -1,10 +1,18 @@
 import CarCard from "@/components/Cars/CarCard";
-import { CarData } from "@/components/Cars/cars.schema";
+import { CarData, CarPosition } from "@/components/Cars/cars.schema";
 import { getSession, getToken } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import CarImage from "@/assets/caricon.png"
 
 import { Link, useNavigate } from "react-router-dom";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { type LatLngTuple, icon } from "leaflet";
+
+const CarIcon = icon({
+  iconUrl: CarImage,
+  iconSize: [65, 65],
+});
 
 const useCars = () => {
   const [cars, setCars] = useState<CarData[]>([]);
@@ -37,14 +45,19 @@ const useCars = () => {
   };
 };
 
+const parsePosition = ({ lattitude, longitude }: CarPosition): LatLngTuple => [
+  lattitude,
+  longitude,
+];
+
 export default function CarsPage() {
   const navigate = useNavigate();
   const session = getSession();
-  const { cars } = useCars();
+  const { cars, isError, error } = useCars();
 
   useEffect(() => {
     if (!session) {
-      navigate("/login");
+      return navigate("/login");
     }
   }, [session]);
   return (
@@ -53,7 +66,24 @@ export default function CarsPage() {
         <h2 className="mt-4 scroll-m-20 text-xl font-semibold tracking-tight">
           Mapa en vivo
         </h2>
-        <div className="bg-slate-100 aspect-square mt-2 rounded-md"></div>
+        {/* <div className="aspect-square mt-2 rounded-md touch-none"> */}
+        <MapContainer
+          center={[20.710332339207074, -103.40994389779895]}
+          zoom={12}
+          scrollWheelZoom={false}
+          className="w-full h-[400px] z-0"
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright>OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {cars.map((car) => (
+            <Marker icon={CarIcon} position={parsePosition(car.position)}>
+              <Popup>{car.plate}</Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+        {/* </div> */}
       </section>
 
       <section>
