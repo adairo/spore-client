@@ -6,6 +6,7 @@ import "./main.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import CarsPage from "@/pages/CarsPage/CarsPage";
 import CarsRegisterPage from "./pages/CarsRegisterPage/CarsRegisterPage";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const Root = () => {
   return (
@@ -37,14 +38,18 @@ const router = createBrowserRouter([
       },
       {
         path: "cars/register",
-        element: <CarsRegisterPage />
-      }
+        element: <CarsRegisterPage />,
+      },
     ],
   },
 ]);
 
+const queryClient = new QueryClient()
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

@@ -1,47 +1,40 @@
 import CarCard from "@/components/Cars/CarCard";
 import { CarData, CarPosition } from "@/components/Cars/cars.schema";
-import { getSession, getToken } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import CarImage from "@/assets/caricon.png"
+import { useEffect } from "react";
+import CarImage from "@/assets/caricon.png";
 
 import { Link, useNavigate } from "react-router-dom";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { type LatLngTuple, icon } from "leaflet";
+import { useQuery } from "react-query";
+import { getCars } from "@/components/Cars/cars.services";
 
 const CarIcon = icon({
   iconUrl: CarImage,
   iconSize: [65, 65],
 });
 
+const CARS_UPDATE_INTERVAL = 2000; // milliseconds
+
 const useCars = () => {
-  const [cars, setCars] = useState<CarData[]>([]);
-  const [error, setError] = useState<Error | undefined>();
-
-  useEffect(() => {
-    const token = getToken() as string;
-    fetch("http://localhost:3001/cars", {
-      method: "GET",
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if ("error" in data) {
-          throw new Error(data.error);
-        }
-
-        return data;
-      })
-      .then(setCars)
-      .catch((error) => setError(error));
-  }, []);
+  // Refetch query every 2 seconds
+  const {
+    data: cars,
+    error,
+    isLoading,
+  } = useQuery<CarData[]>({
+    queryKey: ["cars"],
+    queryFn: getCars,
+    refetchInterval: CARS_UPDATE_INTERVAL,
+  });
 
   return {
-    cars,
+    cars: isLoading ? [] : cars as CarData[],
     error,
     isError: !!error,
+    isLoading,
   };
 };
 
@@ -53,13 +46,14 @@ const parsePosition = ({ lattitude, longitude }: CarPosition): LatLngTuple => [
 export default function CarsPage() {
   const navigate = useNavigate();
   const session = getSession();
-  const { cars, isError, error } = useCars();
+  const { cars } = useCars();
 
   useEffect(() => {
     if (!session) {
       return navigate("/login");
     }
   }, [session]);
+
   return (
     <div className="p-4 space-y-10">
       <section>

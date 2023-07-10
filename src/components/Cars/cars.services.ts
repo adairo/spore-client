@@ -21,6 +21,24 @@ export function registerCar(data: CarRegisterPayload) {
     });
 }
 
+export function getCars() {
+  const token = getToken() as string;
+  return fetch("http://localhost:3001/cars", {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if ("error" in data) {
+        throw new Error(data.error);
+      }
+
+      return data;
+    });
+}
+
 export function editCar(carId: number, data: CarEditPayload) {
   const token = getToken() as string;
   return fetch(`http://localhost:3001/cars/${carId}`, {
