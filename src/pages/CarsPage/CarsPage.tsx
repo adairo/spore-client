@@ -11,6 +11,7 @@ import { type LatLngTuple, icon } from "leaflet";
 import { useQuery } from "react-query";
 import { getCars } from "@/components/Cars/cars.services";
 
+// Create custom car Icon
 const CarIcon = icon({
   iconUrl: CarImage,
   iconSize: [65, 65],
@@ -49,15 +50,16 @@ export default function CarsPage() {
   const { cars } = useCars();
 
   useEffect(() => {
+    // Protect this page
     if (!session) {
       return navigate("/login");
     }
   }, [session]);
 
   return (
-    <div className="p-4 space-y-10">
+    <div className="p-4 w-full grid gap-4 md:grid-cols-2 max-w-3xl mx-auto">
       <section>
-        <h2 className="mt-4 scroll-m-20 text-xl font-semibold tracking-tight">
+        <h2 className="mb-3 scroll-m-20 text-xl font-semibold tracking-tight">
           Mapa en vivo
         </h2>
         {/* <div className="aspect-square mt-2 rounded-md touch-none"> */}
@@ -81,10 +83,10 @@ export default function CarsPage() {
       </section>
 
       <section>
-        <h2 className="mt-4 scroll-m-20 text-xl font-semibold tracking-tight">
+        <h2 className="mb-3 scroll-m-20 text-xl font-semibold tracking-tight">
           Administra tus autos
         </h2>
-        <div className="mt-3 space-y-3">
+        <div className="space-y-3">
           {cars.map((car) => (
             <CarCard key={car.id} {...car} />
           ))}
